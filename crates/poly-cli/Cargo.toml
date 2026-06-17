@@ -1,0 +1,29 @@
+[package]
+name = "poly-cli"
+description = "PolyShield komut satırı arayüzü"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+poly-core = { path = "../poly-core" }
+poly-vm = { path = "../poly-vm" }
+poly-rt = { path = "../poly-rt" }
+poly-pack = { path = "../poly-pack" }
+clap.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { workspace = true, features = [
+    "Win32_Foundation",
+    "Win32_System_LibraryLoader",
+] }
+
+[[bin]]
+name = "poly-cli"
+path = "src/main.rs"

@@ -1,0 +1,66 @@
+name: PolyShield CI
+
+# Faz 4.2 — Otopilot: her push/PR'da derle, test et, lint'le ve örnek hedefi
+# `shield` ile zırhlayıp kapsam kapısını uygula.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-test:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Format kontrolü
+        run: cargo fmt --all --check
+
+      - name: Clippy (uyarı = hata)
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Test
+        run: cargo test --workspace
+
+  shield-autopilot:
+    name: Shield Otopilot (kapsam kapısı)
+    runs-on: windows-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Örnek hedefi derle
+        run: cargo build -p license-demo
+
+      - name: Korumalı fonksiyonları zırhla (min kapsam %85)
+        run: >
+          cargo run -p poly-cli -- shield
+          target/debug/license_demo.dll
+          --min-coverage 0.85
+          --report shield-report.json
+
+      - name: Raporu artefakt olarak yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: shield-report
+          path: shield-report.json

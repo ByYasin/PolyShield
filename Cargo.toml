@@ -1,0 +1,50 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/poly-core",
+    "crates/poly-vm",
+    "crates/poly-rt",
+    "crates/poly-macros",
+    "crates/poly-pack",
+    "crates/poly-cli",
+    "crates/poly-gui",
+    "samples/license-demo",
+    "samples/protected-app",
+    "samples/transparent-hook",
+    "samples/auto-protect-demo",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["PolyShield"]
+repository = "https://github.com/proya/PolyShield"
+rust-version = "1.74"
+
+# Tüm crate'lerin paylaştığı bağımlılık sürümleri burada sabitlenir.
+[workspace.dependencies]
+goblin = "0.8"
+iced-x86 = "1.21"
+windows-sys = "0.59"
+eframe = "0.29"
+egui = "0.29"
+rfd = "0.15"
+syn = { version = "2", features = ["full"] }
+quote = "1"
+proc-macro2 = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+rustc-demangle = "0.1"
+cpp_demangle = "0.4"
+
+# Release çıktısı boyut ve hız için optimize edilir (protector aracı için kritik).
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

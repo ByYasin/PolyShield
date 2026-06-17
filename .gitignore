@@ -1,0 +1,20 @@
+# Rust / Cargo
+/target
+**/*.rs.bk
+Cargo.lock.orig
+
+# Derleme artefaktları
+*.pdb
+*.obj
+*.exp
+*.ilk
+
+# Editör / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Geçici test çıktıları
+/samples/out/
+*.shielded

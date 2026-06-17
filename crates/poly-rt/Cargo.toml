@@ -1,0 +1,33 @@
+[package]
+name = "poly-rt"
+description = "PolyShield runtime: self-encrypting JIT yürütme + anti-debug (Faz 2)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+poly-vm = { path = "../poly-vm" }
+poly-core = { path = "../poly-core" }
+poly-pack = { path = "../poly-pack" }
+
+# Native-escape trampoline: ham komutu yeniden decode + bağlam stub'ı encode.
+[target.'cfg(all(windows, target_arch = "x86_64"))'.dependencies]
+iced-x86 = { workspace = true, features = ["code_asm"] }
+
+# Windows'a özgü anti-debug + trampoline için (DR0-DR7, RWX bellek).
+[target.'cfg(windows)'.dependencies]
+windows-sys = { workspace = true, features = [
+    "Win32_Foundation",
+    "Win32_System_Threading",
+    "Win32_System_Diagnostics_Debug",
+    "Win32_System_Kernel",
+    "Win32_System_Memory",
+    "Win32_System_LibraryLoader",
+] }
+
+[lib]
+name = "poly_rt"
+path = "src/lib.rs"

@@ -1,0 +1,17 @@
+[package]
+name = "poly-pack"
+description = "PolyShield repacker: zırhlı payload'ı PE'ye gömme (Faz 5)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+goblin.workspace = true
+thiserror.workspace = true
+
+[lib]
+name = "poly_pack"
+path = "src/lib.rs"

@@ -1,0 +1,26 @@
+[package]
+name = "poly-core"
+description = "PolyShield çekirdek motoru: binary parse ve (ileride) kod sanallaştırma"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+goblin.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+rustc-demangle = { workspace = true, optional = true }
+cpp_demangle = { workspace = true, optional = true }
+
+[features]
+default = ["demangle"]
+# C++ ve Rust sembol isimlerini okunabilir hale getirir.
+demangle = ["dep:rustc-demangle", "dep:cpp_demangle"]
+
+[lib]
+name = "poly_core"
+path = "src/lib.rs"
